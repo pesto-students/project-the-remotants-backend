@@ -1,0 +1,25 @@
+{
+  "name": "the-remotants-backend",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:PestoTech/project-the-remotants-backend.git",
+  "author": "Nikhil Arora <narora200@gmail.com>, Saumya Tiwari <saumyatiwari.29@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "start": "echo \"starting the-remotants backend\" && nodemon src"
+  },
+  "devDependencies": {
+    "eslint": "^4.19.1",
+    "eslint-config-airbnb": "^16.1.0",
+    "eslint-plugin-import": "^2.10.0",
+    "eslint-plugin-jsx-a11y": "^6.0.3",
+    "eslint-plugin-react": "^7.7.0"
+  },
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "cors": "^2.8.4",
+    "express": "^4.16.3",
+    "morgan": "^1.9.0",
+    "nodemon": "^1.17.4"
+  }
+}
