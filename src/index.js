@@ -17,6 +17,8 @@ app.get('/test', (req, res) => {
   res.json({ status: 'Working!' });
 });
 
-app.listen(port, () => {
+const server = app.listen(port, () => {
   console.log(`Backend is running on PORT: ${port}`);
 });
+
+module.exports = server;
