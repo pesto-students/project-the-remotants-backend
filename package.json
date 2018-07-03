@@ -6,7 +6,7 @@
   "author": "Nikhil Arora <narora200@gmail.com>, Saumya Tiwari <saumyatiwari.29@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "start": "echo \"starting the-remotants backend\" && nodemon src",
+    "start:dev": "echo \"starting the-remotants backend\" && nodemon src",
     "test": "jest"
   },
   "devDependencies": {
@@ -16,13 +16,13 @@
     "eslint-plugin-jsx-a11y": "^6.0.3",
     "eslint-plugin-react": "^7.7.0",
     "jest": "^23.2.0",
+    "nodemon": "^1.17.5",
     "supertest": "^3.1.0"
   },
   "dependencies": {
     "body-parser": "^1.18.3",
     "cors": "^2.8.4",
     "express": "^4.16.3",
-    "morgan": "^1.9.0",
-    "nodemon": "^1.17.4"
+    "morgan": "^1.9.0"
   }
 }
