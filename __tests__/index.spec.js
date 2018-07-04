@@ -1,6 +1,7 @@
-const request = require('supertest');
+import request from 'supertest';
 
-const app = require('../src');
+import app from '../src';
+
 
 describe('loading express', () => {
   let server;
