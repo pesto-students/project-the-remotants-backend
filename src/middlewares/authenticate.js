@@ -12,19 +12,24 @@ export default async (req, res, next) => {
     try {
       const { success, user, errors } = await verifyToken(token);
       if (success === true) {
-        req.currentUser = user;
+        // gets the email as currentUser
+        req.currentUser = user.email;
         next();
       } else {
         res.json(errors);
       }
     } catch (e) {
       res.json({
-        name: 'Caught an error at the time of verifying token.',
+        errors: {
+          name: 'Caught an error at the time of verifying token.',
+        },
       });
     }
   } else {
     res.json({
-      name: 'No token provided',
+      errors: {
+        name: 'No token provided',
+      },
     });
   }
 };
