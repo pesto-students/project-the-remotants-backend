@@ -11,14 +11,13 @@ const userExists = async (db, collection, email) => {
       .find({
         email,
       }).project({
-        _id: 0, email: 1,
+        _id: 0, id: 1, email: 1,
       }).toArray();
-
     const [user] = userArray;
     if (user === null) {
       return null;
     }
-    return user.email;
+    return user;
   } catch (e) {
     return null;
   }

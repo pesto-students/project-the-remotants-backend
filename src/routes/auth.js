@@ -1,4 +1,5 @@
 import express from 'express';
+import shortid from 'shortid';
 
 import { getDb } from '../database';
 import { createToken, generateHash, compareHash } from '../helpers';
@@ -8,11 +9,12 @@ import { productionConstants } from '../config/constants';
 
 const route = express.Router();
 
-export const addUser = async (db, collection, email, password) => {
+export const addUser = async (db, collection, { id, email, password }) => {
   try {
     const hashedPassword = await generateHash(password);
     await db.collection(collection)
       .insertOne({
+        id,
         email,
         password: hashedPassword,
       });
@@ -29,11 +31,11 @@ export const addUser = async (db, collection, email, password) => {
   }
 };
 
-export const registerUser = async (db, collection, { email, password }) => {
+export const registerUser = async (db, collection, { id, email, password }) => {
   try {
     const found = await db.collection(collection).count({ email });
     if (found === 0) {
-      return await addUser(db, collection, email, password);
+      return await addUser(db, collection, { id, email, password });
     }
     return {
       errors: {
@@ -96,7 +98,8 @@ route.post('/register', async (req, res) => {
   if (!isValid) {
     res.json({ errors });
   } else {
-    const response = await registerUser(db, collection, formData);
+    const id = shortid.generate().toLowerCase();
+    const response = await registerUser(db, collection, { ...formData, id });
     res.json(response);
   }
 });
