@@ -1,27 +1,9 @@
 import jwt from 'jsonwebtoken';
-import bcrypt from 'bcrypt';
 
-import { productionConstants } from './config/constants';
-import { getDb } from './database';
+import { getDb } from '../database';
+import { productionConstants } from '../config/constants';
+import userExists from './userExists';
 
-
-const userExists = async (db, collection, email) => {
-  try {
-    const userArray = await db.collection(collection)
-      .find({
-        email,
-      }).project({
-        _id: 0, id: 1, email: 1,
-      }).toArray();
-    const [user] = userArray;
-    if (user === null) {
-      return null;
-    }
-    return user;
-  } catch (e) {
-    return null;
-  }
-};
 
 const createToken = (email) => {
   const token = jwt.sign(
@@ -72,20 +54,7 @@ const verifyToken = async (token) => {
   return res;
 };
 
-const generateHash = async (plainText) => {
-  const hash = await bcrypt.hash(plainText, (+productionConstants.SALT_ROUNDS));
-  return hash;
-};
-
-const compareHash = async (plainText, hash) => {
-  const match = await bcrypt.compare(plainText, hash);
-  return match;
-};
-
 export {
   createToken,
   verifyToken,
-  generateHash,
-  compareHash,
-  userExists,
 };

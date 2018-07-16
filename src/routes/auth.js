@@ -2,7 +2,8 @@ import express from 'express';
 import shortid from 'shortid';
 
 import { getDb } from '../database';
-import { createToken, generateHash, compareHash } from '../helpers';
+import { createToken } from '../helpers/handleToken';
+import { generateHash, compareHash } from '../helpers/handleHash';
 import validations from '../helpers/authValidation';
 import { productionConstants } from '../config/constants';
 
