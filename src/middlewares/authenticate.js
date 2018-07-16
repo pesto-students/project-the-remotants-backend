@@ -1,4 +1,4 @@
-import { verifyToken } from '../helpers';
+import { verifyToken } from '../helpers/handleToken';
 
 
 export default async (req, res, next) => {

@@ -2,9 +2,11 @@ import express from 'express';
 import shortid from 'shortid';
 
 import { getDb } from '../database';
-import { createToken, generateHash, compareHash } from '../helpers';
+import { createToken } from '../helpers/handleToken';
+import { generateHash, compareHash } from '../helpers/handleHash';
 import validations from '../helpers/authValidation';
 import { productionConstants } from '../config/constants';
+import { authRoutes } from '../config/routes';
 
 
 const route = express.Router();
@@ -25,7 +27,7 @@ export const addUser = async (db, collection, { id, email, password }) => {
   } catch (e) {
     return {
       errors: {
-        name: '[Register]: Caught an error while adding user to the Database.',
+        name: '[Register]: Caught an error while adding/updating user',
       },
     };
   }
@@ -89,7 +91,7 @@ export const loginUser = async (db, collection, { email, password }) => {
 };
 
 
-route.post('/register', async (req, res) => {
+route.post(authRoutes.Register, async (req, res) => {
   const db = await getDb();
   const collection = productionConstants.USERS_COLLECTION;
   const formData = req.body;
@@ -104,7 +106,7 @@ route.post('/register', async (req, res) => {
   }
 });
 
-route.post('/login', async (req, res) => {
+route.post(authRoutes.Login, async (req, res) => {
   const db = await getDb();
   const collection = productionConstants.USERS_COLLECTION;
 

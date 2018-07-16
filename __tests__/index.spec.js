@@ -1,6 +1,7 @@
 import request from 'supertest';
 
 import app from '../src';
+import routes from '../src/config/routes';
 
 
 describe('loading express', () => {
@@ -13,7 +14,7 @@ describe('loading express', () => {
   });
   test('responds to /', (done) => {
     request(server)
-      .get('/')
+      .get(routes.Home)
       .expect(200, done);
   });
   test('404 everything else', (done) => {
@@ -23,7 +24,7 @@ describe('loading express', () => {
   });
   test('responds to /test', (done) => {
     request(server)
-      .get('/test')
+      .get(routes.Test)
       .expect(200, {
         status: 'Working!',
       }, done);

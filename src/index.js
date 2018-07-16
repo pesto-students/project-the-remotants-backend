@@ -6,6 +6,7 @@ import { json, urlencoded } from 'body-parser';
 import authRoutes from './routes/auth';
 import dashboardRoutes from './routes/dashboard';
 import { productionConstants } from './config/constants';
+import routes from './config/routes';
 
 
 const app = express();
@@ -17,14 +18,14 @@ app.use(urlencoded({
   extended: true,
 }));
 
-app.use('/auth', authRoutes);
-app.use('/dashboard', dashboardRoutes);
+app.use(routes.Auth, authRoutes);
+app.use(routes.Dashboard, dashboardRoutes);
 
-app.get('/', (req, res) => {
+app.get(routes.Home, (req, res) => {
   res.send("Roll over to /test to see it it's working or not");
 });
 
-app.get('/test', (req, res) => {
+app.get(routes.Test, (req, res) => {
   res.json({ status: 'Working!' });
 });
 
