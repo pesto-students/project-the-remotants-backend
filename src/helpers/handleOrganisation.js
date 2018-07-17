@@ -27,7 +27,8 @@ const registerOrganisation = async (db, collection, { name, description, ownerID
   try {
     const found = await db.collection(collection).count({ name });
     if (found === 0) {
-      return await addOrganisation(db, collection, { name, description, ownerID });
+      const organisation = await addOrganisation(db, collection, { name, description, ownerID });
+      return organisation;
     }
     return {
       errors: {
