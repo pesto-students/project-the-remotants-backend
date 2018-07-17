@@ -1,7 +1,7 @@
 import { getDbClient, getDb } from '../src/testDatabase';
 import { registerUser, loginUser } from '../src/routes/auth';
 import { testConstants } from '../src/config/constants';
-import { updateUser } from '../src/routes/dashboard';
+import { updateUser } from '../src/routes/dashboard/basicSetup';
 
 
 describe('Testing auth functionalities', () => {

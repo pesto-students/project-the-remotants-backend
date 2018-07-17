@@ -7,7 +7,7 @@
   "license": "MIT",
   "scripts": {
     "start": "node build",
-    "start:dev": "nodemon src --exec babel-node",
+    "start:dev": "NODE_ENV=development nodemon src --exec babel-node",
     "build": "rimraf build && webpack --mode production src/",
     "test": "jest",
     "test:coverage": "jest --coverage",
@@ -33,6 +33,7 @@
     "webpack-node-externals": "^1.7.2"
   },
   "dependencies": {
+    "axios": "^0.18.0",
     "bcrypt": "^2.0.1",
     "body-parser": "^1.18.3",
     "cors": "^2.8.4",

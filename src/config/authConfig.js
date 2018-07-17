@@ -1,0 +1,38 @@
+import dotenv from 'dotenv';
+import { productionConstants } from './constants';
+
+dotenv.config();
+
+const {
+  OAUTH_PORT,
+  OAUTH_METHOD,
+  OAUTH_GITHUB_CLIENT_ID,
+  OAUTH_GITHUB_CLIENT_SECRET,
+  OAUTH_GITHUB_HOST,
+  OAUTH_GITHUB_PATH,
+  OAUTH_WAKATIME_CLIENT_ID,
+  OAUTH_WAKATIME_CLIENT_SECRET,
+  OAUTH_WAKATIME_HOST,
+  OAUTH_WAKATIME_PATH,
+} = process.env;
+
+const OAUTH_GITHUB_REDIRECT_URI = `${productionConstants.URLS.FRONTEND_URL}/setup-2?auth=github`;
+const OAUTH_WAKATIME_REDIRECT_URI = `${productionConstants.URLS.FRONTEND_URL}/setup-2?auth=wakatime`;
+
+const config = {
+  OAUTH_PORT,
+  OAUTH_METHOD,
+  OAUTH_GITHUB_CLIENT_ID,
+  OAUTH_GITHUB_CLIENT_SECRET,
+  OAUTH_GITHUB_HOST,
+  OAUTH_GITHUB_PATH,
+  OAUTH_GITHUB_REDIRECT_URI,
+  OAUTH_WAKATIME_CLIENT_ID,
+  OAUTH_WAKATIME_CLIENT_SECRET,
+  OAUTH_WAKATIME_HOST,
+  OAUTH_WAKATIME_PATH,
+  OAUTH_WAKATIME_REDIRECT_URI,
+};
+
+export default config;
+
