@@ -12,8 +12,11 @@ const authRoutes = {
 };
 
 const dashboardRoutes = {
+  GetUser: '/user/:id',
   UserSetup: '/setup',
+  GetOrganisation: '/org/:id',
   OrganisationSetup: '/orgSetup',
+  OrganisationUpdate: '/orgUpdate/:id',
 };
 
 export { authRoutes, dashboardRoutes };
