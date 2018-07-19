@@ -7,6 +7,8 @@ import { generateHash, compareHash } from '../helpers/handleHash';
 import validations from '../helpers/authValidation';
 import { productionConstants } from '../config/constants';
 import { authRoutes } from '../config/routes';
+import createErrorMessage from '../helpers/createErrorMessage';
+import createSuccessMessage from '../helpers/createSuccessMessage';
 
 
 const route = express.Router();
@@ -21,15 +23,9 @@ export const addUser = async (db, collection, { id, email, password }) => {
         password: hashedPassword,
       });
 
-    return {
-      success: true,
-    };
+    return createSuccessMessage();
   } catch (e) {
-    return {
-      errors: {
-        name: '[Register]: Caught an error while adding/updating user',
-      },
-    };
+    return createErrorMessage('[Register]: Caught an error while adding/updating user');
   }
 };
 
@@ -39,17 +35,9 @@ export const registerUser = async (db, collection, { id, email, password }) => {
     if (found === 0) {
       return await addUser(db, collection, { id, email, password });
     }
-    return {
-      errors: {
-        name: 'User exists',
-      },
-    };
+    return createErrorMessage('User exists');
   } catch (e) {
-    return {
-      errors: {
-        name: '[Register]: Caught an error while registering user.',
-      },
-    };
+    return createErrorMessage('[Register]: Caught an error while registering user.');
   }
 };
 
@@ -59,34 +47,19 @@ export const loginUser = async (db, collection, { email, password }) => {
       .findOne({ email });
 
     if (user === null) {
-      return {
-        errors: {
-          name: 'Email entered is incorrect',
-        },
-      };
+      return createErrorMessage('Email entered is incorrect');
     }
     const hashedPassword = user.password;
     const match = await compareHash(password, hashedPassword);
 
     if (match === false) {
-      return {
-        errors: {
-          name: 'Password entered is incorrect',
-        },
-      };
+      return createErrorMessage('Password entered is incorrect');
     }
 
     const token = createToken(user.email);
-    return {
-      success: true,
-      token,
-    };
+    return createSuccessMessage('token', token);
   } catch (e) {
-    return {
-      errors: {
-        name: '[Login]: Caught an error while getting user from the database.',
-      },
-    };
+    return createErrorMessage('[Login]: Caught an error while getting user from the database.');
   }
 };
 

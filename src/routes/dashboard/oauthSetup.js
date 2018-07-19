@@ -6,6 +6,8 @@ import { getDb } from '../../database';
 import { productionConstants } from '../../config/constants';
 import { authRoutes } from '../../config/routes';
 import config from '../../config/authConfig';
+import createErrorMessage from '../../helpers/createErrorMessage';
+import createSuccessMessage from '../../helpers/createSuccessMessage';
 
 
 const route = express.Router();
@@ -20,15 +22,9 @@ const storeAuthDetails = async (db, collection, currentUser, authType, data) => 
         },
       },
     );
-    return {
-      success: true,
-    };
+    return createSuccessMessage();
   } catch (e) {
-    return {
-      errors: {
-        name: 'Caught an error at the time of storing auth details',
-      },
-    };
+    return createErrorMessage('Caught an error at the time of storing auth details');
   }
 };
 
@@ -89,7 +85,7 @@ const authenticate = (authProvider, code, cb) => {
 
   req.write(data);
   req.end();
-  req.on('error', (e) => { cb(e.message); });
+  req.on('error', (e) => { cb(e); });
 };
 
 // Convenience for allowing CORS on routes - GET, POST and OPTIONS only
@@ -105,7 +101,7 @@ route.get(authRoutes.GitHub, (req, res) => {
     const response = {};
     if (error !== null) {
       response.errors = {
-        name: error,
+        name: 'Got an error while connecting to GitHub',
       };
     } else {
       const result = data;
@@ -132,7 +128,7 @@ route.get(authRoutes.WakaTime, (req, res) => {
     const response = {};
     if (error !== null) {
       response.errors = {
-        name: error,
+        name: 'Got an error while connecting to WakaTime',
       };
     } else {
       let [result] = Object.keys(data);
