@@ -3,6 +3,7 @@ import express from 'express';
 import { getDb } from '../../database';
 import { productionConstants } from '../../config/constants';
 import { userRoutes } from '../../config/routes';
+import createErrorMessage from '../../helpers/createErrorMessage';
 
 
 const route = express.Router();
@@ -20,11 +21,7 @@ export const getUser = async (db, collection, id) => {
     }
     return user;
   } catch (e) {
-    return {
-      error: {
-        name: 'Error finding user',
-      },
-    };
+    return createErrorMessage('Error finding user');
   }
 };
 
@@ -34,11 +31,7 @@ route.get(userRoutes.Get, async (req, res) => {
   const userID = req.params.id;
   const user = await getUser(db, collection, userID);
   if (user === null) {
-    res.json({
-      error: {
-        name: 'This user does not exist',
-      },
-    });
+    res.json(createErrorMessage('This user does not exist'));
   } else {
     res.json(user);
   }

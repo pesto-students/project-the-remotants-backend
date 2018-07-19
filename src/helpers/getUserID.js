@@ -1,4 +1,6 @@
 import userExists from './userExists';
+import createErrorMessage from './createErrorMessage';
+
 
 const getUserID = async (db, collection, email) => {
   try {
@@ -6,11 +8,7 @@ const getUserID = async (db, collection, email) => {
     const userID = user.id;
     return userID;
   } catch (e) {
-    return {
-      error: {
-        name: 'Error fetching user id',
-      },
-    };
+    return createErrorMessage('Error fetching user ID');
   }
 };
 

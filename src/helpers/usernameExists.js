@@ -1,3 +1,7 @@
+import createErrorMessage from '../helpers/createErrorMessage';
+import createSuccessMessage from '../helpers/createSuccessMessage';
+
+
 const usernameExists = async (db, collection, username) => {
   try {
     const exists = await db.collection(collection)
@@ -5,21 +9,11 @@ const usernameExists = async (db, collection, username) => {
         username,
       });
     if (exists === 0) {
-      return {
-        success: true,
-      };
+      return createSuccessMessage();
     }
-    return {
-      errors: {
-        name: 'Username already exists',
-      },
-    };
+    return createErrorMessage('Username already exists.');
   } catch (e) {
-    return {
-      errors: {
-        name: 'Caught an error while finding if username exists or not',
-      },
-    };
+    return createErrorMessage('Caught an error while finding if username exists or not');
   }
 };
 
