@@ -1,5 +1,9 @@
 import shortid from 'shortid';
 
+import createErrorMessage from '../helpers/createErrorMessage';
+import createSuccessMessage from '../helpers/createSuccessMessage';
+
+
 const addOrganisation = async (db, collection, { name, description, ownerID }) => {
   const id = shortid.generate().toLowerCase();
   try {
@@ -11,15 +15,9 @@ const addOrganisation = async (db, collection, { name, description, ownerID }) =
         ownerID,
       });
 
-    return {
-      success: true,
-    };
+    return createSuccessMessage();
   } catch (e) {
-    return {
-      errors: {
-        name: '[Register]: Caught an error while adding organisation to the Database.',
-      },
-    };
+    return createErrorMessage('Caught an error while adding organisation to the Database.');
   }
 };
 
@@ -30,17 +28,9 @@ const registerOrganisation = async (db, collection, { name, description, ownerID
       const organisation = await addOrganisation(db, collection, { name, description, ownerID });
       return organisation;
     }
-    return {
-      errors: {
-        name: 'Organisation exists',
-      },
-    };
+    return createErrorMessage('Organisation exists');
   } catch (e) {
-    return {
-      errors: {
-        name: '[Register]: Caught an error while registering org.',
-      },
-    };
+    return createErrorMessage('Caught an error while registering org.');
   }
 };
 

@@ -8,6 +8,7 @@ import oauthSetupRoutes from './oauthSetup';
 import orgRoutes from './organisation';
 import wakatimeRoutes from './wakatime';
 import UserRoutes from './user';
+import createSuccessMessage from '../../helpers/createSuccessMessage';
 
 
 const route = express.Router();
@@ -21,7 +22,7 @@ route.use(dashboardRoutes.WakaTime, wakatimeRoutes);
 route.use(dashboardRoutes.User, UserRoutes);
 
 route.get(routes.Home, (req, res) => {
-  res.json({ success: true });
+  res.json(createSuccessMessage());
 });
 
 export default route;
