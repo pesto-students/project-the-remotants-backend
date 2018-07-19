@@ -4,6 +4,8 @@ import { getDb } from '../../database';
 import { productionConstants } from '../../config/constants';
 import usernameExists from '../../helpers/usernameExists';
 import routes from '../../config/routes';
+import createErrorMessage from '../../helpers/createErrorMessage';
+import createSuccessMessage from '../../helpers/createSuccessMessage';
 
 
 const route = express.Router();
@@ -26,15 +28,9 @@ export const updateUser = async (db, collection, email, dataToBeUpdated) => {
         },
       },
     );
-    return {
-      success: true,
-    };
+    return createSuccessMessage();
   } catch (e) {
-    return {
-      errors: {
-        name: '[Update]: Caught an error while updating user details.',
-      },
-    };
+    return createErrorMessage('[Update]: Caught an error while updating user details.');
   }
 };
 

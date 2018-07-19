@@ -1,3 +1,5 @@
+import createErrorMessage from '../helpers/createErrorMessage';
+
 const userExists = async (db, collection, email) => {
   try {
     const userArray = await db.collection(collection)
@@ -12,11 +14,7 @@ const userExists = async (db, collection, email) => {
     }
     return user;
   } catch (e) {
-    return {
-      error: {
-        name: `Error fetching user ${e}`,
-      },
-    };
+    return createErrorMessage('Error fetching user');
   }
 };
 

@@ -6,6 +6,8 @@ import getUserID from '../../helpers/getUserID';
 import registerOrganisation from '../../helpers/handleOrganisation';
 import { organisationRoutes } from '../../config/routes';
 import getOwnerID from '../../helpers/getOrgOwnerID';
+import createErrorMessage from '../../helpers/createErrorMessage';
+import createSuccessMessage from '../../helpers/createSuccessMessage';
 
 
 const route = express.Router();
@@ -23,11 +25,7 @@ export const getOrg = async (db, collection, id) => {
     }
     return organisation;
   } catch (e) {
-    return {
-      error: {
-        name: 'Error finding organisation',
-      },
-    };
+    return createErrorMessage('Error finding organisation');
   }
 };
 
@@ -43,15 +41,9 @@ export const updateOrg = async (db, collection, id, dataToBeUpdated) => {
         },
       },
     );
-    return {
-      success: true,
-    };
+    return createSuccessMessage();
   } catch (e) {
-    return {
-      errors: {
-        name: '[Register]: Caught an error while updating organisation details.',
-      },
-    };
+    return createErrorMessage('[Register]: Caught an error while updating organisation details.');
   }
 };
 
@@ -61,11 +53,7 @@ route.get(organisationRoutes.Get, async (req, res) => {
   const orgID = req.params.id;
   const organisation = await getOrg(db, collection, orgID);
   if (organisation === null) {
-    res.json({
-      error: {
-        name: 'This organisation does not exist',
-      },
-    });
+    res.json(createErrorMessage('This organisation does not exist'));
   } else {
     res.json(organisation);
   }
@@ -80,11 +68,7 @@ route.post(organisationRoutes.Update, async (req, res) => {
   const { currentUser } = req;
   const reqOwner = await getUserID(db, userCollection, currentUser);
   if (reqOwner !== actualOwner) {
-    res.json({
-      errors: {
-        name: 'You are not the owner',
-      },
-    });
+    res.json(createErrorMessage('You are not the owner'));
   } else {
     const response = await updateOrg(db, orgCollection, organisationID, req.body);
     res.json(response);
@@ -106,21 +90,18 @@ route.post(organisationRoutes.Setup, async (req, res) => {
   // Update user details
   const ownerID = await getUserID(db, userCollection, currentUser);
   if (ownerID === undefined) {
-    res.json({
-      error: {
-        name: 'Could not fetch User ID',
+    res.json(createErrorMessage('Could not fetch User ID'));
+  } else {
+    const response = await registerOrganisation(
+      db,
+      organisationCollection,
+      {
+        ...req.body,
+        ownerID,
       },
-    });
+    );
+    res.json(response);
   }
-  const response = await registerOrganisation(
-    db,
-    organisationCollection,
-    {
-      ...req.body,
-      ownerID,
-    },
-  );
-  res.json(response);
 });
 
 export default route;

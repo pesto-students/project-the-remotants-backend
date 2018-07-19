@@ -3,6 +3,8 @@ import jwt from 'jsonwebtoken';
 import { getDb } from '../database';
 import { productionConstants } from '../config/constants';
 import userExists from './userExists';
+import createErrorMessage from '../helpers/createErrorMessage';
+import createSuccessMessage from '../helpers/createSuccessMessage';
 
 
 const createToken = (email) => {
@@ -20,11 +22,7 @@ const createToken = (email) => {
 const verifyToken = async (token) => {
   const res = await jwt.verify(token, productionConstants.SECRET, async (err, decoded) => {
     if (err) {
-      return ({
-        errors: {
-          name: `Failed to authenticate: ${err}`,
-        },
-      });
+      return createErrorMessage('Failed to authenticate');
     }
     const { email } = decoded;
 
@@ -33,22 +31,11 @@ const verifyToken = async (token) => {
     try {
       const user = await userExists(db, collection, email);
       if (user === null) {
-        return ({
-          errors: {
-            name: 'No such user',
-          },
-        });
+        return createErrorMessage('No such user');
       }
-      return {
-        success: true,
-        user,
-      };
+      return createSuccessMessage('user', user);
     } catch (e) {
-      return {
-        errors: {
-          name: 'Caught an error while checking if the user exists or not.',
-        },
-      };
+      return createErrorMessage('Caught an error while checking if the user exists or not.');
     }
   });
   return res;

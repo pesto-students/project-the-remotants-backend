@@ -1,4 +1,5 @@
 import { verifyToken } from '../helpers/handleToken';
+import createErrorMessage from '../helpers/createErrorMessage';
 
 
 export default async (req, res, next) => {
@@ -19,17 +20,11 @@ export default async (req, res, next) => {
         res.json(errors);
       }
     } catch (e) {
-      res.json({
-        errors: {
-          name: 'Caught an error at the time of verifying token.',
-        },
-      });
+      const error = createErrorMessage('Caught an error at the time of verifying token.');
+      res.json(error);
     }
   } else {
-    res.json({
-      errors: {
-        name: 'No token provided',
-      },
-    });
+    const error = createErrorMessage('No token provided');
+    res.json(error);
   }
 };

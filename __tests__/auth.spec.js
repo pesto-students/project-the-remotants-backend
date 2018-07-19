@@ -39,7 +39,7 @@ describe('Testing auth functionalities', () => {
     test('should not update for existing username', async () => {
       expect(await updateUser(db, collection, 'random@xyz.com', updatedUserInfo)).toHaveProperty(
         'errors',
-        { name: 'Username already exists' },
+        { name: 'Username already exists.' },
       );
     });
 
