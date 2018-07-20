@@ -52,7 +52,8 @@ route.get(wakatimeRoutes.Projects, async (req, res) => {
     };
     try {
       const axiosResponse = await axios(wakatimeApiRoutes.Projects, axiosConfig);
-      response = axiosResponse.data;
+      const { data } = axiosResponse;
+      response = createSuccessMessage('data', data);
     } catch (e) {
       response = createErrorMessage('Caught an error while making API request to WakaTime');
     }
@@ -63,6 +64,43 @@ route.get(wakatimeRoutes.Projects, async (req, res) => {
   }
   res.json(response);
 });
+
+route.get(wakatimeRoutes.ProjectCommits, async (req, res) => {
+  // get the token
+  const projectID = req.params.project;
+  const { currentUser } = req;
+  const db = await getDb();
+  const userCollection = productionConstants.USERS_COLLECTION;
+
+  // get the access token
+  const { success, token, errors } = await getAccessTokenFromEmail(db, userCollection, currentUser);
+  let response;
+  if (success === true) {
+    const axiosConfig = {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    try {
+      const axiosResponse = await axios(`${wakatimeApiRoutes.Projects}/${projectID}/commits`, axiosConfig);
+      const { data } = axiosResponse;
+      response = createSuccessMessage('data', data);
+    } catch (e) {
+      if (e.response.status === 403) {
+        response = createErrorMessage('You don\'t have permissions to access this section!');
+      } else {
+        response = createErrorMessage('Caught an error while making API request to WakaTime');
+      }
+    }
+  } else {
+    response = {
+      errors,
+    };
+  }
+  res.json(response);
+});
+
 
 export default route;
 
