@@ -7,6 +7,7 @@ import basicSetupRoutes from './basicSetup';
 import oauthSetupRoutes from './oauthSetup';
 import orgRoutes from './organisation';
 import wakatimeRoutes from './wakatime';
+import githubRoutes from './github';
 import UserRoutes from './user';
 import createSuccessMessage from '../../helpers/createSuccessMessage';
 
@@ -19,6 +20,7 @@ route.use(dashboardRoutes.BasicSetup, basicSetupRoutes);
 route.use(dashboardRoutes.OAuthSetup, oauthSetupRoutes);
 route.use(dashboardRoutes.Organisation, orgRoutes);
 route.use(dashboardRoutes.WakaTime, wakatimeRoutes);
+route.use(dashboardRoutes.GitHub, githubRoutes);
 route.use(dashboardRoutes.User, UserRoutes);
 
 route.get(routes.Home, (req, res) => {
