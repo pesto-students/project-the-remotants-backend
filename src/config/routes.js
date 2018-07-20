@@ -37,6 +37,7 @@ const WakaTimeApiUrl = 'https://wakatime.com/api/v1';
 
 const wakatimeRoutes = {
   Projects: '/users/current/projects',
+  ProjectCommits: '/users/current/projects/:project/commits',
 };
 
 const wakatimeApiRoutes = {

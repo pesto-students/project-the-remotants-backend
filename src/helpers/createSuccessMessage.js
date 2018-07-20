@@ -1,9 +1,4 @@
 const createSuccessMessage = (argName, arg) => {
-  /*
-  argName
-  * token
-  * user
-  */
   if (arg === undefined || arg === null) {
     return {
       success: true,
