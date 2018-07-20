@@ -38,10 +38,14 @@ const WakaTimeApiUrl = 'https://wakatime.com/api/v1';
 const wakatimeRoutes = {
   Projects: '/users/current/projects',
   ProjectCommits: '/users/current/projects/:project/commits',
+  Durations: '/users/current/durations',
+  CurrentUser: '/users/current',
 };
 
 const wakatimeApiRoutes = {
   Projects: `${WakaTimeApiUrl}/users/current/projects`,
+  Durations: `${WakaTimeApiUrl}/users/current/durations`,
+  CurrentUser: `${WakaTimeApiUrl}/users/current`,
 };
 
 const GitHubApiUrl = 'https://api.github.com';
