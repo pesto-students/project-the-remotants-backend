@@ -102,5 +102,138 @@ route.get(wakatimeRoutes.ProjectCommits, async (req, res) => {
 });
 
 
+route.get(wakatimeRoutes.Durations, async (req, res) => {
+  const { date } = req.query;
+
+  const { currentUser } = req;
+  const db = await getDb();
+  const userCollection = productionConstants.USERS_COLLECTION;
+
+  // get the access token
+  const { success, token, errors } = await getAccessTokenFromEmail(db, userCollection, currentUser);
+  let response;
+  if (success === true) {
+    const axiosConfig = {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    try {
+      const axiosResponse = await axios(`${wakatimeApiRoutes.Durations}?date=${date}`, axiosConfig);
+      const { data } = axiosResponse.data;
+      const aggregator = new Map();
+      data.forEach((item) => {
+        const itemDuration = aggregator.get(item.project);
+        if (itemDuration === undefined) {
+          aggregator.set(item.project, item.duration);
+        } else {
+          aggregator.set(item.project, itemDuration + item.duration);
+        }
+      });
+
+      const aggregatedData = [];
+
+      aggregator.forEach((duration, project) => {
+        aggregatedData.push({
+          project,
+          duration,
+        });
+      });
+
+      response = createSuccessMessage('data', aggregatedData);
+    } catch (e) {
+      if (e.response === undefined) {
+        response = createErrorMessage('Caught an error while making API request to WakaTime');
+      } else {
+        switch (e.response.status) {
+          case 400:
+            response = createErrorMessage('Bad Request');
+            break;
+          case 401:
+            response = createErrorMessage('Unauthorized');
+            break;
+          case 403:
+            response = createErrorMessage('You don\'t have permissions to access this section!');
+            break;
+          case 404:
+            response = createErrorMessage('Not found');
+            break;
+          case 429:
+            response = createErrorMessage('Too many requests');
+            break;
+          case 500:
+            response = createErrorMessage('Server error');
+            break;
+          default:
+            response = createErrorMessage('Caught an error while making API request to WakaTime');
+        }
+      }
+    }
+  } else {
+    response = {
+      errors,
+    };
+  }
+  res.json(response);
+});
+
+
+route.get(wakatimeRoutes.CurrentUser, async (req, res) => {
+  const { currentUser } = req;
+  const db = await getDb();
+  const userCollection = productionConstants.USERS_COLLECTION;
+
+  // get the access token
+  const { success, token, errors } = await getAccessTokenFromEmail(db, userCollection, currentUser);
+  let response;
+  if (success === true) {
+    const axiosConfig = {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    try {
+      const axiosResponse = await axios(wakatimeApiRoutes.CurrentUser, axiosConfig);
+      const { data } = axiosResponse.data;
+      response = createSuccessMessage('data', data);
+    } catch (e) {
+      if (e.response === undefined) {
+        response = createErrorMessage('Caught an error while making API request to WakaTime');
+      } else {
+        switch (e.response.status) {
+          case 400:
+            response = createErrorMessage('Bad Request');
+            break;
+          case 401:
+            response = createErrorMessage('Unauthorized');
+            break;
+          case 403:
+            response = createErrorMessage('You don\'t have permissions to access this section!');
+            break;
+          case 404:
+            response = createErrorMessage('Not found');
+            break;
+          case 429:
+            response = createErrorMessage('Too many requests');
+            break;
+          case 500:
+            response = createErrorMessage('Server error');
+            break;
+          default:
+            response = createErrorMessage('Caught an error while making API request to WakaTime');
+        }
+      }
+    }
+  } else {
+    response = {
+      errors,
+    };
+  }
+  res.json(response);
+});
+
+
 export default route;
 
