@@ -44,12 +44,25 @@ const wakatimeApiRoutes = {
   Projects: `${WakaTimeApiUrl}/users/current/projects`,
 };
 
+const GitHubApiUrl = 'https://api.github.com';
+
+const githubRoutes = {
+  Issues: '/user/issues',
+};
+
+const githubApiRoutes = {
+  Issues: `${GitHubApiUrl}/user/issues`,
+};
+
 export {
   authRoutes,
   dashboardRoutes,
   organisationRoutes,
   wakatimeRoutes,
   wakatimeApiRoutes,
+  githubRoutes,
+  githubApiRoutes,
   userRoutes,
 };
+
 export default routes;

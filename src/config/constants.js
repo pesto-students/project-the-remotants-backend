@@ -15,7 +15,6 @@ const {
   SALT_ROUNDS,
 } = process.env;
 
-
 const PORT = process.env.PORT || 8000;
 
 const URLS = {
