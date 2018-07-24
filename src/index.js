@@ -5,9 +5,9 @@ import { json, urlencoded } from 'body-parser';
 
 import authRoutes from './routes/auth';
 import dashboardRoutes from './routes/dashboard';
+import inviteAuthRoutes from './routes/inviteAuth';
 import { productionConstants } from './config/constants';
 import routes from './config/routes';
-
 
 const app = express();
 
@@ -20,6 +20,7 @@ app.use(urlencoded({
 
 app.use(routes.Auth, authRoutes);
 app.use(routes.Dashboard, dashboardRoutes);
+app.use(routes.InviteAuth, inviteAuthRoutes);
 
 app.get(routes.Home, (req, res) => {
   res.send("Roll over to /test to see it it's working or not");

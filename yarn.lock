@@ -1907,6 +1907,10 @@ ee-first@1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/ee-first/-/ee-first-1.1.1.tgz#590c61156b0ae2f4f0255732a158b266bc56b21d"
 
+ejs@^2.6.1:
+  version "2.6.1"
+  resolved "https://registry.yarnpkg.com/ejs/-/ejs-2.6.1.tgz#498ec0d495655abc6f23cd61868d926464071aa0"
+
 electron-to-chromium@^1.3.47:
   version "1.3.52"
   resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.3.52.tgz#d2d9f1270ba4a3b967b831c40ef71fb4d9ab5ce0"
@@ -4375,6 +4379,16 @@ node-pre-gyp@^0.10.0:
     rimraf "^2.6.1"
     semver "^5.3.0"
     tar "^4"
+
+nodemailer-promise@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/nodemailer-promise/-/nodemailer-promise-2.0.0.tgz#2057f7beac7a5bbafda04dce66134ad332705aaa"
+  dependencies:
+    nodemailer "^4.0.1"
+
+nodemailer@^4.0.1:
+  version "4.6.7"
+  resolved "https://registry.yarnpkg.com/nodemailer/-/nodemailer-4.6.7.tgz#b68de7f36d65618bdeeeb76234e3547d51266373"
 
 nodemon@^1.17.5:
   version "1.18.1"
