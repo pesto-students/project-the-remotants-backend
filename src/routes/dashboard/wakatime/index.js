@@ -6,7 +6,7 @@ import { getDb } from '../../../database';
 import { productionConstants } from '../../../config/constants';
 import createErrorMessage from '../../../helpers/createErrorMessage';
 import createSuccessMessage from '../../../helpers/createSuccessMessage';
-
+import wakatimeErrorHandler from '../../../helpers/wakatimeErrorHandler';
 
 const route = express.Router();
 
@@ -15,7 +15,7 @@ const route = express.Router();
   * 2. all projects of users in a team
 */
 
-const getAccessTokenFromEmail = async (db, collection, email) => {
+export const getAccessTokenFromEmail = async (db, collection, email) => {
   try {
     const userArray = await db.collection(collection)
       .find({
@@ -146,28 +146,7 @@ route.get(wakatimeRoutes.Durations, async (req, res) => {
       if (e.response === undefined) {
         response = createErrorMessage('Caught an error while making API request to WakaTime');
       } else {
-        switch (e.response.status) {
-          case 400:
-            response = createErrorMessage('Bad Request');
-            break;
-          case 401:
-            response = createErrorMessage('Unauthorized');
-            break;
-          case 403:
-            response = createErrorMessage('You don\'t have permissions to access this section!');
-            break;
-          case 404:
-            response = createErrorMessage('Not found');
-            break;
-          case 429:
-            response = createErrorMessage('Too many requests');
-            break;
-          case 500:
-            response = createErrorMessage('Server error');
-            break;
-          default:
-            response = createErrorMessage('Caught an error while making API request to WakaTime');
-        }
+        response = wakatimeErrorHandler(e);
       }
     }
   } else {
@@ -202,28 +181,7 @@ route.get(wakatimeRoutes.CurrentUser, async (req, res) => {
       if (e.response === undefined) {
         response = createErrorMessage('Caught an error while making API request to WakaTime');
       } else {
-        switch (e.response.status) {
-          case 400:
-            response = createErrorMessage('Bad Request');
-            break;
-          case 401:
-            response = createErrorMessage('Unauthorized');
-            break;
-          case 403:
-            response = createErrorMessage('You don\'t have permissions to access this section!');
-            break;
-          case 404:
-            response = createErrorMessage('Not found');
-            break;
-          case 429:
-            response = createErrorMessage('Too many requests');
-            break;
-          case 500:
-            response = createErrorMessage('Server error');
-            break;
-          default:
-            response = createErrorMessage('Caught an error while making API request to WakaTime');
-        }
+        response = wakatimeErrorHandler(e);
       }
     }
   } else {

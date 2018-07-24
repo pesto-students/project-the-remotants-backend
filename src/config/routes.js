@@ -5,6 +5,7 @@ const routes = {
   Test: '/test',
   Auth: '/auth',
   Dashboard: '/dashboard',
+  InviteAuth: '/invite/auth',
 };
 
 const authRoutes = {
@@ -18,6 +19,8 @@ const organisationRoutes = {
   Setup: '/setup',
   Update: '/update/:id',
   Get: '/:id',
+  List: '/list',
+  Invite: '/invite',
 };
 
 const dashboardRoutes = {

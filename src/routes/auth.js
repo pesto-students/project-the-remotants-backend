@@ -33,7 +33,8 @@ export const registerUser = async (db, collection, { id, email, password }) => {
   try {
     const found = await db.collection(collection).count({ email });
     if (found === 0) {
-      return await addUser(db, collection, { id, email, password });
+      const response = await addUser(db, collection, { id, email, password });
+      return response;
     }
     return createErrorMessage('User exists');
   } catch (e) {
@@ -74,7 +75,15 @@ route.post(authRoutes.Register, async (req, res) => {
     res.json({ errors });
   } else {
     const id = shortid.generate().toLowerCase();
-    const response = await registerUser(db, collection, { ...formData, id });
+    const registerResponse = await registerUser(db, collection, { ...formData, id });
+
+    let response;
+    if (registerResponse.success === true) {
+      const token = createToken(formData.email);
+      response = createSuccessMessage('token', token);
+    } else {
+      response = { errors: registerResponse.errors };
+    }
     res.json(response);
   }
 });

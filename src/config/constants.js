@@ -26,6 +26,15 @@ if ((env === 'production') || (env === 'staging')) {
   URLS.FRONTEND_URL = 'https://the-remotants.netlify.com';
 }
 
+const errorStatusCodes = {
+  BAD_REQUEST: 400,
+  UNAUTHORIZED: 401,
+  FORBIDDEN: 403,
+  NOT_FOUND: 404,
+  TOO_MANY_REQUESTS: 429,
+  SERVER_ERROR: 500,
+};
+
 export const productionConstants = {
   DB_URL,
   DB_NAME,
@@ -34,8 +43,10 @@ export const productionConstants = {
   SECRET,
   SALT_ROUNDS,
   ONE_DAY: 7 * 24 * 60 * 60,
+  ONE_HOUR: 60 * 60,
   PORT,
   URLS,
+  ERROR_CODES: errorStatusCodes,
 };
 
 export const testConstants = {
