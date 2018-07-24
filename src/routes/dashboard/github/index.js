@@ -58,4 +58,67 @@ route.get(githubRoutes.Issues, async (req, res) => {
   res.json(response);
 });
 
+route.get(githubRoutes.Repos, async (req, res) => {
+  const { currentUser } = req;
+  const db = await getDb();
+  const userCollection = productionConstants.USERS_COLLECTION;
+
+  const { success, token, errors } = await getAccessTokenFromEmail(db, userCollection, currentUser);
+  let response;
+  if (success === true) {
+    const axiosConfig = {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    try {
+      const axiosResponse = await axios(githubApiRoutes.Repos, axiosConfig);
+      response = createSuccessMessage('data', axiosResponse.data);
+    } catch (e) {
+      response = createErrorMessage('Caught an error while making request to Github');
+    }
+  } else {
+    response = {
+      errors,
+    };
+  }
+  res.json(response);
+});
+
+route.get(githubRoutes.RepoPullRequests, async (req, res) => {
+  const repoName = req.params.repo;
+  const ownerName = req.params.owner;
+  const { currentUser } = req;
+  const db = await getDb();
+  const userCollection = productionConstants.USERS_COLLECTION;
+
+  const { success, token, errors } = await getAccessTokenFromEmail(db, userCollection, currentUser);
+  let response;
+  if (success === true) {
+    const axiosConfig = {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    try {
+      const axiosResponse = await axios(`${githubApiRoutes.RepoPullRequests}/${ownerName}/${repoName}/pulls`, axiosConfig);
+      const { data } = axiosResponse;
+      response = createSuccessMessage('data', data);
+    } catch (e) {
+      if (e.response.status === 403) {
+        response = createErrorMessage('You don\'t have permissions to access this section');
+      } else {
+        response = createErrorMessage('Caught an error while fetching data from GitHub');
+      }
+    }
+  } else {
+    response = {
+      errors,
+    };
+  }
+  res.json(response);
+});
+
 export default route;
