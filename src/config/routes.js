@@ -55,10 +55,14 @@ const GitHubApiUrl = 'https://api.github.com';
 
 const githubRoutes = {
   Issues: '/user/issues',
+  Repos: '/user/repos',
+  RepoPullRequests: '/user/repos/:owner/:repo/pulls',
 };
 
 const githubApiRoutes = {
   Issues: `${GitHubApiUrl}/user/issues`,
+  Repos: `${GitHubApiUrl}/user/repos`,
+  RepoPullRequests: `${GitHubApiUrl}/repos`,
 };
 
 export {
