@@ -131,7 +131,6 @@ route.get(githubRoutes.IfTokenExists, async (req, res) => {
   const { currentUser } = req;
   const db = await getDb();
   const userCollection = productionConstants.USERS_COLLECTION;
-
   const response = await getAccessTokenFromEmail(db, userCollection, currentUser);
 
   if (response.success === true) {
@@ -143,4 +142,36 @@ route.get(githubRoutes.IfTokenExists, async (req, res) => {
   }
 });
 
+route.get(githubRoutes.CurrentUser, async (req, res) => {
+  const { currentUser } = req;
+  const db = await getDb();
+  const userCollection = productionConstants.USERS_COLLECTION;
+
+  const { success, token, errors } = await getAccessTokenFromEmail(db, userCollection, currentUser);
+  let response;
+  if (success === true) {
+    const axiosConfig = {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    try {
+      const axiosResponse = await axios(githubApiRoutes.CurrentUser, axiosConfig);
+      const { data } = axiosResponse;
+      response = createSuccessMessage('data', data);
+    } catch (e) {
+      if (e.response.code === 403) {
+        response = createErrorMessage('You don\'t have permissions to access this section');
+      } else {
+        response = createErrorMessage('Caught an error while fetching data from GitHub');
+      }
+    }
+  } else {
+    response = {
+      errors,
+    };
+  }
+  res.json(response);
+});
 export default route;
