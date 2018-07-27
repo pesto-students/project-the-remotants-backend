@@ -68,12 +68,14 @@ const githubRoutes = {
   Repos: '/user/repos',
   RepoPullRequests: '/user/repos/:owner/:repo/pulls',
   IfTokenExists: '/users/checkToken',
+  CurrentUser: '/user',
 };
 
 const githubApiRoutes = {
   Issues: `${GitHubApiUrl}/user/issues`,
   Repos: `${GitHubApiUrl}/user/repos`,
   RepoPullRequests: `${GitHubApiUrl}/repos`,
+  CurrentUser: `${GitHubApiUrl}/user`,
 };
 
 export {
