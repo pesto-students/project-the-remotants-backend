@@ -1,6 +1,4 @@
 import express from 'express';
-import ejs from 'ejs';
-import path from 'path';
 
 import { getDb } from '../../database';
 import { productionConstants } from '../../config/constants';
@@ -12,7 +10,8 @@ import createErrorMessage from '../../helpers/createErrorMessage';
 import createSuccessMessage from '../../helpers/createSuccessMessage';
 import { getWakaTimeTokenFromEmail } from './wakatime';
 import mailer from '../../config/mailerConfig';
-import { createInviteToken } from '../../helpers/handleInviteToken';
+import createInviteToken from '../../helpers/createInviteToken';
+import getMailContentInHTML from '../../helpers/getMailContentInHTML';
 
 
 const route = express.Router();
@@ -144,7 +143,6 @@ route.post(organisationRoutes.Invite, async (req, res) => {
   const { emails, manager, organisationID } = req.body;
   const emailsArray = JSON.parse(emails);
 
-  // check if the logged in user is the owner of the individual
   const db = await getDb();
   const userCollection = productionConstants.USERS_COLLECTION;
   const orgCollection = productionConstants.ORGANISATIONS_COLLECTION;
@@ -157,36 +155,30 @@ route.post(organisationRoutes.Invite, async (req, res) => {
     const organisation = await getOrg(db, orgCollection, organisationID);
 
     const { URLS: { FRONTEND_URL } } = productionConstants;
+
     // send email via invite
-    emailsArray.forEach((email) => {
+    emailsArray.forEach(async (email) => {
       const token = createInviteToken(email, manager, organisationID);
-      ejs.renderFile(
-        path.join(__dirname, '/../../views/inviteMail.ejs'),
-        {
-          email,
-          organisation: organisation.name,
-          manager,
-          token,
-          URL: FRONTEND_URL,
-        },
-        async (err, data) => {
-          if (err) {
-            res.json(createErrorMessage(`Caught error while fetching email template! ${err}`));
-            return;
-          }
-          try {
-            const message = {
-              from: 'theremotants@gmail.com',
-              to: email,
-              subject: '[Invite] You are invited',
-              html: data,
-            };
-            await mailer(message);
-          } catch (e) {
-            res.json(createErrorMessage('Caught error while sending mail!'));
-          }
-        },
-      );
+
+      const htmlData = getMailContentInHTML({
+        email,
+        organisation: organisation.data.name,
+        manager,
+        token,
+        URL: FRONTEND_URL,
+      });
+
+      try {
+        const message = {
+          from: 'theremotants@gmail.com',
+          to: email,
+          subject: '[Invite] You are invited',
+          html: htmlData,
+        };
+        await mailer(message);
+      } catch (e) {
+        res.json(createErrorMessage('Caught error while sending mail!'));
+      }
     });
     res.json(createSuccessMessage());
   }
