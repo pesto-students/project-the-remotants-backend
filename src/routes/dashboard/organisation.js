@@ -10,26 +10,29 @@ import { organisationRoutes } from '../../config/routes';
 import getOwnerID from '../../helpers/getOrgOwnerID';
 import createErrorMessage from '../../helpers/createErrorMessage';
 import createSuccessMessage from '../../helpers/createSuccessMessage';
-import { getAccessTokenFromEmail } from './wakatime';
+import { getWakaTimeTokenFromEmail } from './wakatime';
 import mailer from '../../config/mailerConfig';
 import { createInviteToken } from '../../helpers/handleInviteToken';
 
 
 const route = express.Router();
-const { registerOrganisation, listOrganisations } = organisationHelper;
+const {
+  registerOrganisation,
+  listOrganisations,
+} = organisationHelper;
 
 export const getOrg = async (db, collection, id) => {
   try {
     const organisationArray = await db.collection(collection).find({
       id,
     }).project({
-      _id: 0, name: 1, description: 1, ownerID: 1,
+      _id: 0,
     }).toArray();
     const [organisation] = organisationArray;
     if (organisation === undefined) {
       return null;
     }
-    return organisation;
+    return createSuccessMessage('data', organisation);
   } catch (e) {
     return createErrorMessage('Error finding organisation');
   }
@@ -80,15 +83,11 @@ route.post(organisationRoutes.Setup, async (req, res) => {
 
 // List all the organisations that pertain to an individual
 route.get(organisationRoutes.List, async (req, res) => {
-  /*
-  * ownerID: string
-  */
   const { currentUser } = req;
   const db = await getDb();
   const userCollection = productionConstants.USERS_COLLECTION;
   const organisationCollection = productionConstants.ORGANISATIONS_COLLECTION;
 
-  // Update user details
   const getUserIDResponse = await getUserID(db, userCollection, currentUser);
   if (getUserIDResponse.success !== true) {
     res.json(createErrorMessage('Could not fetch User ID'));
@@ -97,7 +96,7 @@ route.get(organisationRoutes.List, async (req, res) => {
       success,
       token,
       errors,
-    } = await getAccessTokenFromEmail(db, userCollection, currentUser);
+    } = await getWakaTimeTokenFromEmail(db, userCollection, currentUser);
 
     if (success === false) {
       res.json(errors);
@@ -162,7 +161,7 @@ route.post(organisationRoutes.Invite, async (req, res) => {
     emailsArray.forEach((email) => {
       const token = createInviteToken(email, manager, organisationID);
       ejs.renderFile(
-        path.join(__dirname, '../../views/inviteMail.ejs'),
+        path.join(__dirname, '/../../views/inviteMail.ejs'),
         {
           email,
           organisation: organisation.name,
@@ -172,7 +171,7 @@ route.post(organisationRoutes.Invite, async (req, res) => {
         },
         async (err, data) => {
           if (err) {
-            res.json(createErrorMessage('Caught error while fetching email template!'));
+            res.json(createErrorMessage(`Caught error while fetching email template! ${err}`));
             return;
           }
           try {

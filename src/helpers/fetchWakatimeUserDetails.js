@@ -14,7 +14,7 @@ const wakatimeUserDetails = async (token) => {
     },
   };
   try {
-    const axiosResponse = await axios(wakatimeApiRoutes.CurrentUser, axiosConfig);
+    const axiosResponse = await axios(wakatimeApiRoutes.UserDetails, axiosConfig);
     const { data } = axiosResponse.data;
     return createSuccessMessage('data', data);
   } catch (e) {

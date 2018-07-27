@@ -4,7 +4,6 @@ import shortid from 'shortid';
 import { getDb } from '../database';
 import { createToken } from '../helpers/handleToken';
 import { generateHash, compareHash } from '../helpers/handleHash';
-import validations from '../helpers/authValidation';
 import { productionConstants } from '../config/constants';
 import { authRoutes } from '../config/routes';
 import createErrorMessage from '../helpers/createErrorMessage';
@@ -70,22 +69,17 @@ route.post(authRoutes.Register, async (req, res) => {
   const collection = productionConstants.USERS_COLLECTION;
   const formData = req.body;
 
-  const { errors, isValid } = validations.validateInput(formData);
-  if (!isValid) {
-    res.json({ errors });
-  } else {
-    const id = shortid.generate().toLowerCase();
-    const registerResponse = await registerUser(db, collection, { ...formData, id });
+  const id = shortid.generate().toLowerCase();
+  const registerResponse = await registerUser(db, collection, { ...formData, id });
 
-    let response;
-    if (registerResponse.success === true) {
-      const token = createToken(formData.email);
-      response = createSuccessMessage('token', token);
-    } else {
-      response = { errors: registerResponse.errors };
-    }
-    res.json(response);
+  let response;
+  if (registerResponse.success === true) {
+    const token = createToken(formData.email);
+    response = createSuccessMessage('token', token);
+  } else {
+    response = { errors: registerResponse.errors };
   }
+  res.json(response);
 });
 
 route.post(authRoutes.Login, async (req, res) => {
@@ -93,13 +87,9 @@ route.post(authRoutes.Login, async (req, res) => {
   const collection = productionConstants.USERS_COLLECTION;
 
   const formData = req.body;
-  const { errors, isValid } = validations.validateInput(formData);
-  if (!isValid) {
-    res.json({ errors });
-  } else {
-    const response = await loginUser(db, collection, formData);
-    res.json(response);
-  }
+
+  const response = await loginUser(db, collection, formData);
+  res.json(response);
 });
 
 export default route;

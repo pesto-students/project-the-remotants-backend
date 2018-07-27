@@ -1,21 +1,22 @@
 import createErrorMessage from '../helpers/createErrorMessage';
+import createSuccessMessage from './createSuccessMessage';
 
-const userExists = async (db, collection, email) => {
+const getUserDetailsFromID = async (db, collection, id) => {
   try {
     const userArray = await db.collection(collection)
       .find({
-        email,
+        id,
       }).project({
         _id: 0,
       }).toArray();
     const [user] = userArray;
     if (user === undefined) {
-      return null;
+      return createErrorMessage('No such user exists');
     }
-    return user;
+    return createSuccessMessage('data', user);
   } catch (e) {
     return createErrorMessage('Error fetching user');
   }
 };
 
-export default userExists;
+export default getUserDetailsFromID;

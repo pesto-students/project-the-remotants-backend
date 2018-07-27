@@ -10,6 +10,8 @@ import createErrorMessage from '../../../helpers/createErrorMessage';
 
 const route = express.Router();
 
+const connectToGitHubErrorMessage = 'You need to connect your GitHub account!';
+
 const getAccessTokenFromEmail = async (db, collection, email) => {
   try {
     const userArray = await db.collection(collection)
@@ -19,16 +21,19 @@ const getAccessTokenFromEmail = async (db, collection, email) => {
         _id: 0, 'github.access_token': 1,
       }).toArray();
     const [user] = userArray;
+    if (user.github === undefined) {
+      return createErrorMessage(connectToGitHubErrorMessage);
+    }
     const token = user.github.access_token;
     if (token === undefined) {
-      return createErrorMessage('You need to connect your github account!');
+      return createErrorMessage(connectToGitHubErrorMessage);
     }
     return createSuccessMessage('token', token);
   } catch (e) {
     return createErrorMessage('Caught an error while getting details from Mongo');
   }
 };
-// /dashboard/api/github
+
 route.get(githubRoutes.Issues, async (req, res) => {
   // get the token
   const { currentUser } = req;
@@ -119,6 +124,23 @@ route.get(githubRoutes.RepoPullRequests, async (req, res) => {
     };
   }
   res.json(response);
+});
+
+
+route.get(githubRoutes.IfTokenExists, async (req, res) => {
+  const { currentUser } = req;
+  const db = await getDb();
+  const userCollection = productionConstants.USERS_COLLECTION;
+
+  const response = await getAccessTokenFromEmail(db, userCollection, currentUser);
+
+  if (response.success === true) {
+    res.json(createSuccessMessage());
+  } else if (response.errors.name === connectToGitHubErrorMessage) {
+    res.json({ success: false });
+  } else {
+    res.json({ errors: response.errors });
+  }
 });
 
 export default route;
