@@ -110,9 +110,9 @@ route.get(authRoutes.GitHub, (req, res) => {
       // store the result in mongo for the current user
       const { currentUser } = req;
       const db = await getDb();
-      const collection = productionConstants.USERS_COLLECTION;
+      const usersCollection = productionConstants.USERS_COLLECTION;
 
-      const { success, errors } = await storeAuthDetails(db, collection, currentUser, 'github', result);
+      const { success, errors } = await storeAuthDetails(db, usersCollection, currentUser, 'github', result);
       if (success === true) {
         response.success = success;
       } else {
@@ -137,9 +137,9 @@ route.get(authRoutes.WakaTime, (req, res) => {
 
       const { currentUser } = req;
       const db = await getDb();
-      const collection = productionConstants.USERS_COLLECTION;
+      const usersCollection = productionConstants.USERS_COLLECTION;
 
-      const { success, errors } = await storeAuthDetails(db, collection, currentUser, 'wakatime', result);
+      const { success, errors } = await storeAuthDetails(db, usersCollection, currentUser, 'wakatime', result);
       if (success === true) {
         response.success = success;
       } else {

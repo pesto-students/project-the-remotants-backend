@@ -24,7 +24,9 @@ export const joinOrganisation = async (db, organisationsCollection, {
       await db.collection(organisationsCollection).update(
         { id: organisation },
         {
-          $push: { employee: userID },
+          $push: {
+            employee: userID,
+          },
         },
       );
     } else {
@@ -32,7 +34,9 @@ export const joinOrganisation = async (db, organisationsCollection, {
       await db.collection(organisationsCollection).update(
         { id: organisation },
         {
-          $push: { manager: userID },
+          $push: {
+            manager: userID,
+          },
         },
       );
     }
@@ -82,12 +86,32 @@ export const registerInvitedUser = async (db, usersCollection, organisationsColl
   manager,
 }) => {
   try {
-    const found = await db.collection(usersCollection).count({ email });
-    if (found !== 0) {
+    const userArray = await db.collection(usersCollection)
+      .find({
+        email,
+      }).project({
+        _id: 0,
+      }).toArray();
+    const [user] = userArray;
+
+    if (user !== undefined) {
       try {
         await db.collection(usersCollection).remove({
           email,
         });
+
+        await db.collection(organisationsCollection).update(
+          {
+            id: organisation,
+          },
+          {
+            $pull: {
+              manager: user.id,
+              employee: user.id,
+            },
+          },
+          { multi: true },
+        );
       } catch (e) {
         return createErrorMessage('[Register]: Caught an error while registering user.');
       }

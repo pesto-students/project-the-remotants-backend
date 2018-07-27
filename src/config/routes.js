@@ -1,4 +1,5 @@
 const apiRoute = '/api';
+const managerRoute = '/manager';
 
 const routes = {
   Home: '/',
@@ -21,6 +22,9 @@ const organisationRoutes = {
   Get: '/:id',
   List: '/list',
   Invite: '/invite',
+  Manager: {
+    List: `${managerRoute}/list`,
+  },
 };
 
 const dashboardRoutes = {
@@ -42,13 +46,19 @@ const wakatimeRoutes = {
   Projects: '/users/current/projects',
   ProjectCommits: '/users/current/projects/:project/commits',
   Durations: '/users/current/durations',
-  CurrentUser: '/users/current',
+  UserDetails: '/users/current',
+  OrganisationMemberStats: '/users/all/:userID',
+  Stats: '/users/current/stats/:dateRange',
+  Summaries: '/users/current/summaries',
+  IfTokenExists: '/users/checkToken',
 };
 
 const wakatimeApiRoutes = {
   Projects: `${WakaTimeApiUrl}/users/current/projects`,
   Durations: `${WakaTimeApiUrl}/users/current/durations`,
-  CurrentUser: `${WakaTimeApiUrl}/users/current`,
+  UserDetails: `${WakaTimeApiUrl}/users/current`,
+  Stats: `${WakaTimeApiUrl}/users/current/stats`,
+  Summaries: `${WakaTimeApiUrl}/users/current/summaries`,
 };
 
 const GitHubApiUrl = 'https://api.github.com';
@@ -57,6 +67,7 @@ const githubRoutes = {
   Issues: '/user/issues',
   Repos: '/user/repos',
   RepoPullRequests: '/user/repos/:owner/:repo/pulls',
+  IfTokenExists: '/users/checkToken',
 };
 
 const githubApiRoutes = {

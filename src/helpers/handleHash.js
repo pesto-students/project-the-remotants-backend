@@ -12,6 +12,7 @@ const compareHash = async (plainText, hash) => {
   return match;
 };
 
+
 export {
   generateHash,
   compareHash,
