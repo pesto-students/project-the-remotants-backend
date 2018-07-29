@@ -31,7 +31,6 @@ export const getWakaTimeTokenFromEmail = async (db, collection, email) => {
     }
     return createSuccessMessage('token', token);
   } catch (e) {
-    console.log(e);
     if (e.response === undefined) {
       return createErrorMessage('Caught an error while making API request to WakaTime');
     }
@@ -92,8 +91,8 @@ const getAggregatedDurations = (data) => {
 
   aggregator.forEach((duration, project) => {
     aggregatedData.push({
-      project,
-      duration,
+      name: project,
+      total_seconds: duration,
     });
   });
 
@@ -260,6 +259,37 @@ route.get(wakatimeRoutes.Durations, async (req, res) => {
       };
     } else {
       response = getDurationsResponse;
+    }
+  } else {
+    response = {
+      errors,
+    };
+  }
+  res.json(response);
+});
+
+
+route.get(wakatimeRoutes.DateRangeDurations, async (req, res) => {
+  const { start, end } = req.query;
+
+  const { currentUser } = req;
+  const db = await getDb();
+  const userCollection = productionConstants.USERS_COLLECTION;
+
+  const {
+    success,
+    token,
+    errors,
+  } = await getWakaTimeTokenFromEmail(db, userCollection, currentUser);
+  let response;
+  if (success === true) {
+    const getSummariesResponse = await getSummaries(token, { start, end });
+    if (getSummariesResponse.success !== true) {
+      response = {
+        errors: getSummariesResponse.errors,
+      };
+    } else {
+      response = getSummariesResponse;
     }
   } else {
     response = {

@@ -5,7 +5,6 @@ const getMailContentInHTML = ({
   token,
   URL,
 }) => {
-  console.log(organisation);
   return `
     <h2>Hey ${email} </h2>
     <br />

@@ -46,6 +46,7 @@ const wakatimeRoutes = {
   Projects: '/users/current/projects',
   ProjectCommits: '/users/current/projects/:project/commits',
   Durations: '/users/current/durations',
+  DateRangeDurations: '/users/current/durations/range',
   UserDetails: '/users/current',
   OrganisationMemberStats: '/users/all/:userID',
   Stats: '/users/current/stats/:dateRange',
