@@ -1,8 +1,11 @@
 ## The Remotants - Backend
 
 ## Project URL
+**Backend:**
+https://the-remotants-backend.herokuapp.com
 
-[https://the-remotants-backend.herokuapp.com/](https://the-remotants-backend.herokuapp.com/)
+**Frontend:**
+https://github.com/PestoTech/project-the-remotants-frontend
 
 
 ## Description
